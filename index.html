@@ -5,14 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI SECURITY CHECK</title>
 
-<styl
-  ===== スマホでは口を非表示 ===== */
-@media (max-width: 600px){
-  .mouth{
-    display: none;
-  }
-}
-
+<style>
 html,body{
   margin:0;
   background:#000;
@@ -41,11 +34,11 @@ body{
   display:block;
 }
 
-/* ===== 口（自然サイズ版） ===== */
+/* ===== 口（PC用） ===== */
 .mouth{
   position:absolute;
   left:50%;
-  top:calc(44.5% + 23px);  /* ← 1mm 下げた最終位置 */
+  top:calc(44.5% + 23px);
   transform:translateX(-50%);
   width:12px;
   height:3px;
@@ -55,11 +48,12 @@ body{
   transition:height 0.05s ease;
 }
 
-
-
-
-
-
+/* ===== スマホでは口を非表示 ===== */
+@media (max-width: 600px){
+  .mouth{
+    display:none;
+  }
+}
 
 /* ===== クリック案内 ===== */
 .hint{
@@ -105,9 +99,6 @@ const text =
 "安心して、プラモガレージをお楽しみください。" +
 "安全なトップページに転送します。";
 
-
-
-
 const mouth = document.getElementById("mouth");
 const hint  = document.getElementById("hint");
 
@@ -123,14 +114,18 @@ function startTTS(){
 
   u.onstart = () => {
     timer = setInterval(() => {
-      const h = 4 + Math.random() * 10; // ← 最大14px
-      mouth.style.height = h.toFixed(0) + "px";
+      if(mouth){
+        const h = 4 + Math.random() * 10;
+        mouth.style.height = h + "px";
+      }
     }, 80);
   };
 
   u.onend = () => {
     clearInterval(timer);
-    mouth.style.height = "4px";
+    if(mouth){
+      mouth.style.height = "3px";
+    }
     setTimeout(() => {
       location.href = REDIRECT_URL;
     }, 900);
@@ -140,11 +135,12 @@ function startTTS(){
   speechSynthesis.speak(u);
 }
 
-/* ユーザー操作必須（自動再生対策） */
+/* ユーザー操作必須 */
 document.body.addEventListener("click", startTTS, { once:true });
 </script>
 
 </body>
 </html>
+
 
 
