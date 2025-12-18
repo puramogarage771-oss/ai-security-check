@@ -21,33 +21,34 @@ body{
   font-family:monospace;
 }
 
-/* ステージ */
+/* ===== ステージ ===== */
 .stage{
   position:relative;
   width:360px;
   max-width:90vw;
 }
 
-/* AI画像 */
+/* ===== AI画像 ===== */
 .stage img{
   width:100%;
   display:block;
 }
 
-/* 口（リップシンク） */
+/* ===== 口（自然サイズ版） ===== */
 .mouth{
   position:absolute;
   left:50%;
-  top:50%;
+  top:47%; /* ← 口の位置 */
   transform:translateX(-50%);
-  width:22%;
-  height:6px;
+  width:18%;
+  height:4px;
   background:#00ffff;
   border-radius:999px;
-  box-shadow:0 0 24px rgba(0,255,255,0.9);
+  box-shadow:0 0 18px rgba(0,255,255,0.8);
+  transition:height 0.05s ease;
 }
 
-/* クリック案内 */
+/* ===== クリック案内 ===== */
 .hint{
   position:fixed;
   bottom:40px;
@@ -89,7 +90,6 @@ const text =
 "安全を確認。" +
 "安全なプラモガレージのトップページに転送します。";
 
-
 const mouth = document.getElementById("mouth");
 const hint  = document.getElementById("hint");
 
@@ -105,24 +105,24 @@ function startTTS(){
 
   u.onstart = () => {
     timer = setInterval(() => {
-      const h = 8 + Math.random() * 36;
+      const h = 4 + Math.random() * 10; // ← 最大14px
       mouth.style.height = h.toFixed(0) + "px";
-    }, 70);
+    }, 80);
   };
 
   u.onend = () => {
     clearInterval(timer);
-    mouth.style.height = "6px";
+    mouth.style.height = "4px";
     setTimeout(() => {
       location.href = REDIRECT_URL;
-    }, 800);
+    }, 900);
   };
 
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
-/* ユーザー操作必須（自動再生対策・正解ルート） */
+/* ユーザー操作必須（自動再生対策） */
 document.body.addEventListener("click", startTTS, { once:true });
 </script>
 
