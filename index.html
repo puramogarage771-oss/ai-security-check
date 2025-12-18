@@ -1,1 +1,102 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI SECURITY CHECK</title>
+
+<style>
+html,body{
+  margin:0;
+  background:#000;
+  height:100%;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* 表示ステージ */
+.stage{
+  position:relative;
+  width:360px;
+  max-width:90vw;
+}
+
+/* AI画像 */
+.stage img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* 口レイヤー */
+.mouth{
+  position:absolute;
+  left:50%;
+  top:63%;
+  transform:translateX(-50%);
+  width:22%;
+  height:6px;
+  background:rgba(0,255,255,0.95);
+  border-radius:999px;
+  box-shadow:0 0 22px rgba(0,255,255,0.9);
+}
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+  <img src="ai.png" alt="AI Assistant">
+  <div class="mouth" id="mouth"></div>
+</div>
+
+<script>
+const REDIRECT_URL = "https://www.puramogarage.com/";
+
+const text =
+"警告。ウイルス反応を検知。" +
+"システムスキャンを開始します。" +
+"通信経路、データ領域、ダウンロードノードを検査中。" +
+"異常は検出されませんでした。" +
+"安全を確認。" +
+"安全なプラモガレージのトップページに転送します。";
+
+const mouth = document.getElementById("mouth");
+
+function startTTS(){
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = 0.95;
+  u.pitch = 1.05;
+
+  let timer = null;
+
+  u.onstart = () => {
+    timer = setInterval(() => {
+      const h = 8 + Math.random() * 36;
+      mouth.style.height = h.toFixed(0) + "px";
+    }, 70);
+  };
+
+  u.onend = () => {
+    clearInterval(timer);
+    mouth.style.height = "6px";
+    setTimeout(() => {
+      location.href = REDIRECT_URL;
+    }, 700);
+  };
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+document.body.addEventListener("click", startTTS, { once:true });
+</script>
+
+</body>
+</html>
 
