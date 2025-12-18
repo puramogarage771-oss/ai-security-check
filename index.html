@@ -16,9 +16,12 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
+  overflow:hidden;
+  cursor:pointer;
+  font-family:monospace;
 }
 
-/* 表示ステージ */
+/* ステージ */
 .stage{
   position:relative;
   width:360px;
@@ -28,11 +31,10 @@ body{
 /* AI画像 */
 .stage img{
   width:100%;
-  height:auto;
   display:block;
 }
 
-/* 口レイヤー */
+/* 口（リップシンク） */
 .mouth{
   position:absolute;
   left:50%;
@@ -40,9 +42,27 @@ body{
   transform:translateX(-50%);
   width:22%;
   height:6px;
-  background:rgba(0,255,255,0.95);
+  background:#00ffff;
   border-radius:999px;
-  box-shadow:0 0 22px rgba(0,255,255,0.9);
+  box-shadow:0 0 24px rgba(0,255,255,0.9);
+}
+
+/* クリック案内 */
+.hint{
+  position:fixed;
+  bottom:40px;
+  width:100%;
+  text-align:center;
+  color:#00ffff;
+  font-size:12px;
+  letter-spacing:0.25em;
+  opacity:0.7;
+  animation:blink 1.8s infinite;
+}
+
+@keyframes blink{
+  0%,100%{opacity:0.2;}
+  50%{opacity:0.9;}
 }
 </style>
 </head>
@@ -54,25 +74,30 @@ body{
   <div class="mouth" id="mouth"></div>
 </div>
 
+<div class="hint" id="hint">
+CLICK TO START SECURITY CHECK
+</div>
+
 <script>
 const REDIRECT_URL = "https://www.puramogarage.com/";
 
 const text =
-const text =
-"警告。ウイルス反応を検知。" +
-"システムスキャンを開始します。" +
-"通信経路、データ領域、ダウンロードノードを検査中。" +
-"異常は検出されませんでした。" +
-"安全を確認。" +
+"アクセスを確認。" +
+"外部からの侵入をスキャンしています。" +
+"ウイルス、マルウェア、異常コードを解析中。" +
+"問題は検出されませんでした。" +
+"セキュリティレベル、グリーン。" +
 "安全なプラモガレージのトップページに転送します。";
 
-
 const mouth = document.getElementById("mouth");
+const hint  = document.getElementById("hint");
 
 function startTTS(){
+  hint.style.display = "none";
+
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "ja-JP";
-  u.rate = 0.95;
+  u.lang  = "ja-JP";
+  u.rate  = 0.9;
   u.pitch = 1.05;
 
   let timer = null;
@@ -89,16 +114,18 @@ function startTTS(){
     mouth.style.height = "6px";
     setTimeout(() => {
       location.href = REDIRECT_URL;
-    }, 700);
+    }, 800);
   };
 
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
+/* ユーザー操作必須（自動再生対策・正解ルート） */
 document.body.addEventListener("click", startTTS, { once:true });
 </script>
 
 </body>
 </html>
+
 
